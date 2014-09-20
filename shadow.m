@@ -47,9 +47,9 @@ shad=ImagePad[m,padding,Padding->Black]~Blur~b;
 shadcol=colorimage[tocolor[OptionValue["color"]],ImageDimensions[shad]];
 shad=SetAlphaChannel[shadcol,shad];
 object=ImagePad[SetAlphaChannel[i,m],Reverse/@padding,Padding->RGBColor[0,0,0,0]];
-result=ImageCompose[shad,object];
+result=iComp[shad,object];
 If[bkg=!=0,
-result=ImageCompose[ImagePad[rastersize[bkg,dims],Reverse/@padding,Padding->Automatic],result]];
+result=iComp[ImagePad[rastersize[bkg,dims],Reverse/@padding,Padding->Automatic],result]];
 ImagePad[result,Clip[8-BorderDimensions[result,0],{-Infinity,0}],Padding->Automatic]]
 
 
@@ -64,7 +64,7 @@ tocolor[notcol_]:=Black
 colorimage[col_,dims_]:=ImageResize[Image[{{{##}}}],dims]&@@col
 
 
-toimage[ob:(_Image|_Graphics)]:=ob
+toimage[ob:(_Image)]:=ob
 toimage[ob:anycolor]:=colorimage[tocolor[ob],{360,360}]
 toimage[ob_]:=Rasterize[ob]
 
@@ -118,6 +118,12 @@ ImageAdd[i,Image[hi]]]
 
 
 outline[i_,m_]:=ImageMultiply[i,ColorNegate[m~ImagePad~1~GradientFilter~1~ImagePad~-1]]
+
+
+ic[a_,b_]:=Rasterize[Overlay[{a,b}],"Image",Background->None]
+
+
+iComp=If[$VersionNumber==10,ic,ImageCompose]
 
 
 End[];
