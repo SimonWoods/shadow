@@ -123,7 +123,7 @@ outline[i_,m_]:=ImageMultiply[i,ColorNegate[m~ImagePad~1~GradientFilter~1~ImageP
 ic[a_,b_]:=Rasterize[Overlay[{a,b}],"Image",Background->None]
 
 
-iComp=If[$VersionNumber==10,ic,ImageCompose]
+iComp=If[$VersionNumber>=10,ic,ImageCompose]
 
 
 End[];
